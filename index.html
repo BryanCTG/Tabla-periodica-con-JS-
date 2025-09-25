@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscador de Elementos</title>
+  <script>
+    function normalizar(texto) {
+      return texto.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+    }
+
+    function buscarElemento() {
+      const input = document.getElementById("search").value;
+      const filter = normalizar(input);
+
+      // Checkboxes
+      const buscarNumero = document.getElementById("chkNumero").checked;
+      const buscarSimbolo = document.getElementById("chkSimbolo").checked;
+      const buscarNombre = document.getElementById("chkNombre").checked;
+      const buscarMasa = document.getElementById("chkMasa").checked;
+
+      // --- TABLA COMPLETA (118 elementos) ---
+      const tabla = [
+        {numero: 1, simbolo: "H", nombre: "Hidrógeno", masa: "1.008"},
+        {numero: 2, simbolo: "He", nombre: "Helio", masa: "4.0026"},
+        {numero: 3, simbolo: "Li", nombre: "Litio", masa: "6.94"},
+        {numero: 4, simbolo: "Be", nombre: "Berilio", masa: "9.0122"},
+        {numero: 5, simbolo: "B", nombre: "Boro", masa: "10.81"},
+        {numero: 6, simbolo: "C", nombre: "Carbono", masa: "12.011"},
+        {numero: 7, simbolo: "N", nombre: "Nitrógeno", masa: "14.007"},
+        {numero: 8, simbolo: "O", nombre: "Oxígeno", masa: "15.999"},
+        {numero: 9, simbolo: "F", nombre: "Flúor", masa: "18.998"},
+        {numero: 10, simbolo: "Ne", nombre: "Neón", masa: "20.180"},
+        {numero: 11, simbolo: "Na", nombre: "Sodio", masa: "22.990"},
+        {numero: 12, simbolo: "Mg", nombre: "Magnesio", masa: "24.305"},
+        {numero: 13, simbolo: "Al", nombre: "Aluminio", masa: "26.982"},
+        {numero: 14, simbolo: "Si", nombre: "Silicio", masa: "28.085"},
+        {numero: 15, simbolo: "P", nombre: "Fósforo", masa: "30.974"},
+        {numero: 16, simbolo: "S", nombre: "Azufre", masa: "32.06"},
+        {numero: 17, simbolo: "Cl", nombre: "Cloro", masa: "35.45"},
+        {numero: 18, simbolo: "Ar", nombre: "Argón", masa: "39.948"},
+        {numero: 19, simbolo: "K", nombre: "Potasio", masa: "39.098"},
+        {numero: 20, simbolo: "Ca", nombre: "Calcio", masa: "40.078"},
+        {numero: 21, simbolo: "Sc", nombre: "Escandio", masa: "44.956"},
+        {numero: 22, simbolo: "Ti", nombre: "Titanio", masa: "47.867"},
+        {numero: 23, simbolo: "V", nombre: "Vanadio", masa: "50.942"},
+        {numero: 24, simbolo: "Cr", nombre: "Cromo", masa: "51.996"},
+        {numero: 25, simbolo: "Mn", nombre: "Manganeso", masa: "54.938"},
+        {numero: 26, simbolo: "Fe", nombre: "Hierro", masa: "55.845"},
+        {numero: 27, simbolo: "Co", nombre: "Cobalto", masa: "58.933"},
+        {numero: 28, simbolo: "Ni", nombre: "Níquel", masa: "58.693"},
+        {numero: 29, simbolo: "Cu", nombre: "Cobre", masa: "63.546"},
+        {numero: 30, simbolo: "Zn", nombre: "Zinc", masa: "65.38"},
+        {numero: 31, simbolo: "Ga", nombre: "Galio", masa: "69.723"},
+        {numero: 32, simbolo: "Ge", nombre: "Germanio", masa: "72.63"},
+        {numero: 33, simbolo: "As", nombre: "Arsénico", masa: "74.922"},
+        {numero: 34, simbolo: "Se", nombre: "Selenio", masa: "78.971"},
+        {numero: 35, simbolo: "Br", nombre: "Bromo", masa: "79.904"},
+        {numero: 36, simbolo: "Kr", nombre: "Kriptón", masa: "83.798"},
+        {numero: 37, simbolo: "Rb", nombre: "Rubidio", masa: "85.468"},
+        {numero: 38, simbolo: "Sr", nombre: "Estroncio", masa: "87.62"},
+        {numero: 39, simbolo: "Y", nombre: "Itrio", masa: "88.906"},
+        {numero: 40, simbolo: "Zr", nombre: "Circonio", masa: "91.224"},
+        {numero: 41, simbolo: "Nb", nombre: "Niobio", masa: "92.906"},
+        {numero: 42, simbolo: "Mo", nombre: "Molibdeno", masa: "95.95"},
+        {numero: 43, simbolo: "Tc", nombre: "Tecnecio", masa: "98"},
+        {numero: 44, simbolo: "Ru", nombre: "Rutenio", masa: "101.07"},
+        {numero: 45, simbolo: "Rh", nombre: "Rodio", masa: "102.91"},
+        {numero: 46, simbolo: "Pd", nombre: "Paladio", masa: "106.42"},
+        {numero: 47, simbolo: "Ag", nombre: "Plata", masa: "107.87"},
+        {numero: 48, simbolo: "Cd", nombre: "Cadmio", masa: "112.41"},
+        {numero: 49, simbolo: "In", nombre: "Indio", masa: "114.82"},
+        {numero: 50, simbolo: "Sn", nombre: "Estaño", masa: "118.71"},
+        {numero: 51, simbolo: "Sb", nombre: "Antimonio", masa: "121.76"},
+        {numero: 52, simbolo: "Te", nombre: "Telurio", masa: "127.60"},
+        {numero: 53, simbolo: "I", nombre: "Yodo", masa: "126.90"},
+        {numero: 54, simbolo: "Xe", nombre: "Xenón", masa: "131.29"},
+        {numero: 55, simbolo: "Cs", nombre: "Cesio", masa: "132.91"},
+        {numero: 56, simbolo: "Ba", nombre: "Bario", masa: "137.33"},
+        {numero: 57, simbolo: "La", nombre: "Lantano", masa: "138.91"},
+        {numero: 58, simbolo: "Ce", nombre: "Cerio", masa: "140.12"},
+        {numero: 59, simbolo: "Pr", nombre: "Praseodimio", masa: "140.91"},
+        {numero: 60, simbolo: "Nd", nombre: "Neodimio", masa: "144.24"},
+        {numero: 61, simbolo: "Pm", nombre: "Prometio", masa: "145"},
+        {numero: 62, simbolo: "Sm", nombre: "Samario", masa: "150.36"},
+        {numero: 63, simbolo: "Eu", nombre: "Europio", masa: "151.96"},
+        {numero: 64, simbolo: "Gd", nombre: "Gadolinio", masa: "157.25"},
+        {numero: 65, simbolo: "Tb", nombre: "Terbio", masa: "158.93"},
+        {numero: 66, simbolo: "Dy", nombre: "Disprosio", masa: "162.50"},
+        {numero: 67, simbolo: "Ho", nombre: "Holmio", masa: "164.93"},
+        {numero: 68, simbolo: "Er", nombre: "Erbio", masa: "167.26"},
+        {numero: 69, simbolo: "Tm", nombre: "Tulio", masa: "168.93"},
+        {numero: 70, simbolo: "Yb", nombre: "Iterbio", masa: "173.05"},
+        {numero: 71, simbolo: "Lu", nombre: "Lutecio", masa: "174.97"},
+        {numero: 72, simbolo: "Hf", nombre: "Hafnio", masa: "178.49"},
+        {numero: 73, simbolo: "Ta", nombre: "Tantalio", masa: "180.95"},
+        {numero: 74, simbolo: "W", nombre: "Wolframio", masa: "183.84"},
+        {numero: 75, simbolo: "Re", nombre: "Renio", masa: "186.21"},
+        {numero: 76, simbolo: "Os", nombre: "Osmio", masa: "190.23"},
+        {numero: 77, simbolo: "Ir", nombre: "Iridio", masa: "192.22"},
+        {numero: 78, simbolo: "Pt", nombre: "Platino", masa: "195.08"},
+        {numero: 79, simbolo: "Au", nombre: "Oro", masa: "196.97"},
+        {numero: 80, simbolo: "Hg", nombre: "Mercurio", masa: "200.59"},
+        {numero: 81, simbolo: "Tl", nombre: "Talio", masa: "204.38"},
+        {numero: 82, simbolo: "Pb", nombre: "Plomo", masa: "207.2"},
+        {numero: 83, simbolo: "Bi", nombre: "Bismuto", masa: "208.98"},
+        {numero: 84, simbolo: "Po", nombre: "Polonio", masa: "209"},
+        {numero: 85, simbolo: "At", nombre: "Astato", masa: "210"},
+        {numero: 86, simbolo: "Rn", nombre: "Radón", masa: "222"},
+        {numero: 87, simbolo: "Fr", nombre: "Francio", masa: "223"},
+        {numero: 88, simbolo: "Ra", nombre: "Radio", masa: "226"},
+        {numero: 89, simbolo: "Ac", nombre: "Actinio", masa: "227"},
+        {numero: 90, simbolo: "Th", nombre: "Torio", masa: "232.04"},
+        {numero: 91, simbolo: "Pa", nombre: "Protactinio", masa: "231.04"},
+        {numero: 92, simbolo: "U", nombre: "Uranio", masa: "238.03"},
+        {numero: 93, simbolo: "Np", nombre: "Neptunio", masa: "237"},
+        {numero: 94, simbolo: "Pu", nombre: "Plutonio", masa: "244"},
+        {numero: 95, simbolo: "Am", nombre: "Americio", masa: "243"},
+        {numero: 96, simbolo: "Cm", nombre: "Curio", masa: "247"},
+        {numero: 97, simbolo: "Bk", nombre: "Berkelio", masa: "247"},
+        {numero: 98, simbolo: "Cf", nombre: "Californio", masa: "251"},
+        {numero: 99, simbolo: "Es", nombre: "Einsteinio", masa: "252"},
+        {numero: 100, simbolo: "Fm", nombre: "Fermio", masa: "257"},
+        {numero: 101, simbolo: "Md", nombre: "Mendelevio", masa: "258"},
+        {numero: 102, simbolo: "No", nombre: "Nobelio", masa: "259"},
+        {numero: 103, simbolo: "Lr", nombre: "Lawrencio", masa: "262"},
+        {numero: 104, simbolo: "Rf", nombre: "Rutherfordio", masa: "267"},
+        {numero: 105, simbolo: "Db", nombre: "Dubnio", masa: "270"},
+        {numero: 106, simbolo: "Sg", nombre: "Seaborgio", masa: "271"},
+        {numero: 107, simbolo: "Bh", nombre: "Bohrio", masa: "270"},
+        {numero: 108, simbolo: "Hs", nombre: "Hassio", masa: "277"},
+        {numero: 109, simbolo: "Mt", nombre: "Meitnerio", masa: "278"},
+        {numero: 110, simbolo: "Ds", nombre: "Darmstadtio", masa: "281"},
+        {numero: 111, simbolo: "Rg", nombre: "Roentgenio", masa: "282"},
+        {numero: 112, simbolo: "Cn", nombre: "Copernicio", masa: "285"},
+        {numero: 113, simbolo: "Nh", nombre: "Nihonio", masa: "286"},
+        {numero: 114, simbolo: "Fl", nombre: "Flerovio", masa: "289"},
+        {numero: 115, simbolo: "Mc", nombre: "Moscovio", masa: "290"},
+        {numero: 116, simbolo: "Lv", nombre: "Livermorio", masa: "293"},
+        {numero: 117, simbolo: "Ts", nombre: "Tenesino", masa: "294"},
+        {numero: 118, simbolo: "Og", nombre: "Oganesón", masa: "294"}
+      ];
+
+      const resultados = tabla.filter(item => {
+        return (
+          (buscarNumero && normalizar(item.numero.toString()).includes(filter)) ||
+          (buscarSimbolo && normalizar(item.simbolo).includes(filter)) ||
+          (buscarNombre && normalizar(item.nombre).includes(filter)) ||
+          (buscarMasa && normalizar(item.masa).includes(filter))
+        );
+      });
+
+      let output = "";
+      if (resultados.length > 0) {
+        resultados.forEach(item => {
+          output += `${item.numero} - ${item.simbolo} - ${item.nombre} - ${item.masa}<br>`;
+        });
+      } else {
+        output = "No se encontraron resultados.";
+      }
+      document.getElementById("resultado").innerHTML = output;
+    }
+  </script>
+</head>
+<body>
+  <input type="text" id="search" placeholder="Buscar elemento...">
+  <button onclick="buscarElemento()">Buscar</button>
+  <br><br>
+  
+  <label><input type="checkbox" id="chkNumero" checked> Número atómico</label>
+  <label><input type="checkbox" id="chkSimbolo" checked> Símbolo</label>
+  <label><input type="checkbox" id="chkNombre" checked> Nombre</label>
+  <label><input type="checkbox" id="chkMasa" checked> Masa atómica</label>
+
+  <div id="resultado"></div>
+</body>
+</html>
